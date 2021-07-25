@@ -7,7 +7,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   colorMode(HSB, 360, 100, 100, 100);
   background(0);
-  for (let i = 0; i < 100; i++){
+  let num = height*.2;
+  for (let i = 0; i < num; i++){
     flock.push(new Bug());
   }
 }
@@ -35,9 +36,9 @@ function draw() {
 
 class TimeCone{
   constructor(){
-    this.wide = random(30);
+    this.wide = random(height*.03);
     this.high = this.wide*2;
-    this.inside = random(90);
+    this.inside = createVector(random(200, 360), random(100), random(100));
     this.outside = random(100,200);
     this.vel = createVector(0, 0, 0);
     this.loc = createVector(0, 0, 0);
@@ -66,7 +67,7 @@ class TimeCone{
     rotateX(this.spin);
     rotateY(this.spin);
     rotateZ(this.spin);
-    fill(this.inside);
+    fill(this.inside.x, this.inside.y, this.inside.z);
     stroke(this.outside, 100, 100, 10);
     // noStroke();
     cone(this.wide, this.high, 10);
@@ -91,9 +92,9 @@ class Bug{
     constructor(){
       this.loc = createVector(0, 0, 0);
       this.vel = createVector(0, 0, 0);
-      this.rad = random(height*0.5);
+      // this.rad = random(height*0.5);
       this.ts = random(6);
-      this.color = random(360);
+      this.color = random(250,360);
     }
   
     run(){
@@ -111,10 +112,11 @@ class Bug{
     
     display(){
       push();
-      fill(this.color, random(100), random(100));
+      fill(random(255))
+      // fill(this.color, random(100), random(100));
       noStroke()
       translate(this.loc);
-      plane(random(this.rad), random(20));
+      sphere(random(8,10), 3, 3);
       pop();
     }
   }
