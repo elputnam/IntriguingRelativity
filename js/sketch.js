@@ -2,22 +2,37 @@ let swarm = [];
 let flock = [];
 let spin = 0;
 
+//CCapture
+var capture = false; // default is to not capture frames, can be changed with button in browser
+var capturer = new CCapture({
+  format:'gif', 
+  workersPath: 'js/',
+  framerate: 60
+});
+
+const NUM_FRAMES = 275;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  // createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(500, 500, WEBGL);
   colorMode(HSB, 360, 100, 100, 100);
   background(0);
   let num = height*.2;
   for (let i = 0; i < num; i++){
     flock.push(new Bug());
   }
+
+  
 }
 
 function draw() {
   // background(random(10));
+  if (capture && frameCount==1) capturer.start(); // start the animation capture
   push();
-  locX = map(mouseX, 0, width, -width/2, width/2);
-  locY = map(mouseY, 0, height, -height/2, height/2);
+  // locX = map(mouseX, 0, width, -width/2, width/2);
+  // locY = map(mouseY, 0, height, -height/2, height/2);
+  locX = 0;
+  locY = 0;
   translate(locX, locY, 0);
   swarm.push(new TimeCone());
   for(let i = swarm.length - 1; i >= 0; i--){
@@ -31,7 +46,28 @@ function draw() {
   for(let i = 0; i < flock.length; i++){
     flock[i].run();
     }
+
+  //capture details
+  if (capture){
+    capturer.capture( canvas ); // if capture is 'true', save the frame
+    if (frameCount-1 == NUM_FRAMES){ //stop and save after NUM_FRAMES
+        capturer.stop(); 
+        capturer.save(); 
+        noLoop(); 
+      }
+    }
   }
+
+  function buttonPress()
+{
+    if (capture == false) {
+        capture = true;
+        document.getElementById("myButton").value='Saving Frames... Press Again to Cancel'; 
+        frameCount = 0;
+    } else {
+        location.reload(); //refresh the page (starts animation over, stops saving frames)
+    }
+}
 
 
 class TimeCone{
